@@ -480,7 +480,7 @@ Never cross personal boundaries; always gentle, supportive, and affectionate."""
 def download_and_load_classifier():
     model_dir = "custom-nsfw-detector"
     if not os.path.exists(model_dir):
-        file_id = "1A2B3C4D5EfGHiJKl"  # Replace with your actual file ID
+        file_id = "1nhlQnRipNuhzpLSH6UC49Ip5XJddv8L8"  # Replace with your actual file ID
         url = f"https://drive.google.com/uc?id={file_id}"
         output = "model.zip"
 
