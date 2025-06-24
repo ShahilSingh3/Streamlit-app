@@ -618,7 +618,7 @@ elif st.session_state.page == "chat":
     response = ""
 
     # result = classifier(question)[0]
-    response, model = call_non_nsfw(user_message, personality, previous_conversation, user_gender, username, bot_name, bot_prompt)
+    response, model = call_non_nsfw(user_message, personality, previous_conversation, user_gender, username, st.session_state.bot_origin, bot_prompt)
 
     if user_input:
         # Placeholder chatbot logic (replace with your actual model)
