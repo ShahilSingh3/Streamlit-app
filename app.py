@@ -630,7 +630,7 @@ elif st.session_state.page == "chat":
                 bot_placeholder.markdown(f"🤖 **Bot:** {typed_text}▌")  # Blinking cursor style
                 time.sleep(0.01)  # Adjust speed here
 
-    bot_placeholder.markdown(f"🤖 **Bot:** {typed_text}")  # Final message without cursor
+            bot_placeholder.markdown(f"🤖 **Bot:** {typed_text}")  # Final message without cursor
 
     if st.button("⬅️ Back"):
         st.session_state.page = "form"
