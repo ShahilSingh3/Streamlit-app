@@ -615,13 +615,14 @@ elif st.session_state.page == "chat":
         " for the user question: " + user_message +
         "Keep the response strictly within 3-4 lines " + instruction
     )
-    response = ""
+    
 
     # result = classifier(question)[0]
     response, model = call_non_nsfw(user_message, st.session_state.personality, previous_conversation, st.session_state.gender, st.session_state.username, st.session_state.bot_origin, bot_prompt)
 
     if user_input:
         # Placeholder chatbot logic (replace with your actual model)
+        bot_placeholder = st.empty
         bot_placeholder.markdown(f"🤖 **Bot:** {response}")  # Final message without cursor
 
     if st.button("⬅️ Back"):
