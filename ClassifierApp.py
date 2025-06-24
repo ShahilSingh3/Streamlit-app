@@ -476,6 +476,29 @@ Never cross personal boundaries; always gentle, supportive, and affectionate."""
 
 
 
+@st.cache_resource
+def download_and_load_classifier():
+    model_dir = "custom-nsfw-detector"
+    if not os.path.exists(model_dir):
+        file_id = "1nhlQnRipNuhzpLSH6UC49Ip5XJddv8L8"  # Replace with your actual file ID
+        url = f"https://drive.google.com/uc?id={file_id}"
+        output = "model.zip"
+
+        # Download zip file from Google Drive
+        gdown.download(url, output, quiet=False)
+
+        # Extract the model
+        with zipfile.ZipFile(output, 'r') as zip_ref:
+            zip_ref.extractall(model_dir)
+
+        st.success("✅ Model downloaded and extracted!")
+
+    # Load the model as HuggingFace pipeline
+    from transformers import pipeline
+    classifier = pipeline("text-classification", model=model_dir)
+    return classifier
+
+classifier = download_and_load_classifier()
 
 #the function to call the non-NSFW bot
 def call_non_nsfw(query, text, previous_conversation, gender, username, botname, bot_prompt):
@@ -498,7 +521,7 @@ def call_non_nsfw(query, text, previous_conversation, gender, username, botname,
                 {"role": "system", "content": bot_prompt},
                 {"role": "user", "content": f"{previous_conversation} {query}"}
             ],
-            "allow_nsfw": True,  #This is what enables NSFW generation
+            "allow_nsfw": False,  #This is what enables NSFW generation
             "temperature": 1.0,               # Adjusts randomness; 1.0 is good for creativity
             "top_p": 0.9,                     # Controls diversity via nucleus sampling
             "frequency_penalty": 0.7,        # Reduces repetition of similar lines
@@ -521,7 +544,47 @@ def call_non_nsfw(query, text, previous_conversation, gender, username, botname,
 
 
 
+#function for the nsfw model
+def call_nsfw(query, text, previous_conversation, gender, username, botname, bot_prompt):
+    user1 = username
+    user2 = botname
+    url_response = "https://api.novita.ai/v3/openai/chat/completions"  #  append `/chat/completions`
+    api_key = st.secrets["API_KEY"]  #  replace with your Novita API key
 
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json"
+    }
+
+    response = requests.post(
+        url_response,
+        headers=headers,
+        json={
+            "model": "Sao10K/L3-8B-Stheno-v3.2",  # model ID
+            "messages": [
+                {"role": "system", "content": bot_prompt},
+                {"role": "user", "content": f"{previous_conversation} {query}"}
+            ],
+            "allow_nsfw": True,  #This is what enables NSFW generation
+            "temperature": 1.0,               # Adjusts randomness; 1.0 is good for creativity
+            "top_p": 0.9,                     # Controls diversity via nucleus sampling
+            "frequency_penalty": 0.7,        # Reduces repetition of similar lines
+            "presence_penalty": 0.0
+        }
+    )
+    model = "Stheno-v3.2"
+    try:
+        print("Response JSON:")
+        x = response.json()
+        final = x["choices"][0]["message"]["content"]
+    except Exception as e:
+        print("Non-JSON response:", e)
+        final = response.text()
+
+    for k in ["User1", "user1", "[user1]", "[User1]"]:
+        final = final.replace(k, user1)
+
+    return final, model
 
 # -----------------form page-------------------------
 
@@ -584,8 +647,9 @@ if st.session_state.page == "form":
     st.session_state.relationship = relationship
     st.session_state.bot_origin = bot_origin
     st.session_state.bot_name = bot_name
+
     # Proceed Button
-    st.button("Proceed to Chatbot", on_click = go_to_chat)
+    st.button("Proceed to Chatbot", on_click=go_to_chat)
 
 # ------------------ PAGE 2: Chatbot ------------------
 elif st.session_state.page == "chat":
@@ -596,7 +660,6 @@ elif st.session_state.page == "chat":
     st.markdown(f"**Gender:** {st.session_state.gender}")
     st.markdown(f"**Personality:** {st.session_state.personality}")
     st.markdown(f"**Bot Origin:** {st.session_state.bot_origin}")
-    st.markdown(f"**Bot Name:** {st.session_state.bot_name}")
 
     user_input = st.text_input("You:", "")
     question = user_input
@@ -604,7 +667,7 @@ elif st.session_state.page == "chat":
     instruction = "Strict instruction: Respond according to your personality given and keep the response between 3-4 lines"
 
     user_message = question
-    response = ""
+
     previous_conversation = ""  # Implement history later if needed
     
     bot_prompt = (
@@ -615,16 +678,25 @@ elif st.session_state.page == "chat":
         " for the user question: " + user_message +
         "Keep the response strictly within 3-4 lines " + instruction
     )
-    
 
-    # result = classifier(question)[0]
-    response, model = call_non_nsfw(user_message, st.session_state.personality, previous_conversation, st.session_state.gender, st.session_state.username, st.session_state.bot_origin, bot_prompt)
-    previous_conversation = response
+    response = ""
+
+    result = classifier(question)[0]
+
+    if result['label'] == 'nsfw' and result['score'] > 0.7:
+        # print(question, "👉 Detected as **NSFW**") #was used to test the model and debugging
+        response, model = call_nsfw(user_message, st.session_state.personality, previous_conversation, st.session_state.gender, st.session_state.username, st.session_state.bot_origin, bot_prompt)
+    else:
+        # print(question, "✅ Detected as **NOT NSFW**") #was used to test the model and debugging
+        response, model = call_non_nsfw(user_message, st.session_state.personality, previous_conversation, st.session_state.gender, st.session_state.username, st.session_state.bot_origin, bot_prompt)
     
+    previous_conversation = response
+
     if user_input:
         # Placeholder chatbot logic (replace with your actual model)
         bot_placeholder = st.empty()
         bot_placeholder.markdown(f"🤖 **Bot:** {response}")  # Final message without cursor
+
 
     if st.button("⬅️ Back"):
         st.session_state.page = "form"
