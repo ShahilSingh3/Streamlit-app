@@ -622,15 +622,7 @@ elif st.session_state.page == "chat":
 
     if user_input:
         # Placeholder chatbot logic (replace with your actual model)
-        if response:
-            bot_placeholder = st.empty()
-            typed_text = ""
-            for char in response:
-                typed_text += char
-                bot_placeholder.markdown(f"🤖 **Bot:** {typed_text}▌")  # Blinking cursor style
-                time.sleep(0.01)  # Adjust speed here
-
-            bot_placeholder.markdown(f"🤖 **Bot:** {typed_text}")  # Final message without cursor
+        bot_placeholder.markdown(f"🤖 **Bot:** {response}")  # Final message without cursor
 
     if st.button("⬅️ Back"):
         st.session_state.page = "form"
