@@ -472,14 +472,14 @@ Questions: Playful, thoughtful, caring.
 Emojis: Occasional—🥹, 🫶, 😘—to add sweetness.
 Never cross personal boundaries; always gentle, supportive, and affectionate."""
 
-from huggingface_hub import login
-login(token=st.secrets["token"])
+#from huggingface_hub import login
+#login(token=st.secrets["token"])
 
 
 @st.cache_resource
 def load_classifier():
-    tokenizer = AutoTokenizer.from_pretrained("ShailxT/custom-nsfw-detector")
-    model = AutoModelForSequenceClassification.from_pretrained("ShailxT/custom-nsfw-detector")
+    tokenizer = AutoTokenizer.from_pretrained("ynopet/roberta-base-openai-detector")
+    model = AutoModelForSequenceClassification.from_pretrained("ynopet/roberta-base-openai-detector")
     classifier = pipeline("text-classification", model=model, tokenizer=tokenizer)
     return classifier
 
