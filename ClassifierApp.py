@@ -473,7 +473,7 @@ Emojis: Occasional—🥹, 🫶, 😘—to add sweetness.
 Never cross personal boundaries; always gentle, supportive, and affectionate."""
 
 from huggingface_hub import login
-login(token="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")
+login(token=st.secrets["token"])
 
 
 @st.cache_resource
