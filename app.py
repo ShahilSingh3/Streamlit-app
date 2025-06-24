@@ -604,7 +604,7 @@ elif st.session_state.page == "chat":
     instruction = "Strict instruction: Respond according to your personality given and keep the response between 3-4 lines"
 
     user_message = question
-
+    response = ""
     previous_conversation = ""  # Implement history later if needed
     
     bot_prompt = (
@@ -612,7 +612,6 @@ elif st.session_state.page == "chat":
         ", your name is " + st.session_state.bot_name +
         ", and you talk/respond by applying your reasoning. " + st.session_state.personality +
         " Given you are the user's " + st.session_state.relationship +
-        ", critique your earlier response: " + response +
         " for the user question: " + user_message +
         "Keep the response strictly within 3-4 lines " + instruction
     )
