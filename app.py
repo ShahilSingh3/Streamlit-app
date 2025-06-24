@@ -583,9 +583,9 @@ if st.session_state.page == "form":
     st.session_state.personality = personality
     st.session_state.relationship = relationship
     st.session_state.bot_origin = bot_origin
-
+    st.session_state.bot_name = bot_name
     # Proceed Button
-    st.button("Proceed to Chatbot", on_click=go_to_chat)
+    st.button("Proceed to Chatbot", on_click = go_to_chat)
 
 # ------------------ PAGE 2: Chatbot ------------------
 elif st.session_state.page == "chat":
@@ -608,9 +608,9 @@ elif st.session_state.page == "chat":
     
     bot_prompt = (
         "You are a person from " + st.session_state.bot_origin +
-        ", your name is " + bot_name +
-        ", and you talk/respond by applying your reasoning. " + personality +
-        " Given you are the user's " + relationship +
+        ", your name is " + st.session_state.bot_name +
+        ", and you talk/respond by applying your reasoning. " + st.session_state.personality +
+        " Given you are the user's " + st.session_state.relationship +
         ", critique your earlier response: " + response +
         " for the user question: " + user_message +
         "Keep the response strictly within 3-4 lines " + instruction
@@ -618,7 +618,7 @@ elif st.session_state.page == "chat":
     response = ""
 
     # result = classifier(question)[0]
-    response, model = call_non_nsfw(user_message, personality, previous_conversation, user_gender, username, st.session_state.bot_origin, bot_prompt)
+    response, model = call_non_nsfw(user_message, st.session_state.personality, previous_conversation, st.session_state.gender, st.session_state.username, st.session_state.bot_origin, bot_prompt)
 
     if user_input:
         # Placeholder chatbot logic (replace with your actual model)
