@@ -505,7 +505,7 @@ def call_non_nsfw(query, text, previous_conversation, gender, username, botname,
             "presence_penalty": 0.0
         }
     )
-    model = "llama-3-8b"
+    
     try:
         print("Response JSON:")
         x = response.json()
@@ -517,7 +517,7 @@ def call_non_nsfw(query, text, previous_conversation, gender, username, botname,
     for k in ["User1", "user1", "[user1]", "[User1]"]:
         final = final.replace(k, user1)
 
-    return final, model
+    return final
 
 
 
@@ -618,9 +618,9 @@ elif st.session_state.page == "chat":
     
 
     # result = classifier(question)[0]
-    response, model = call_non_nsfw(user_message, st.session_state.personality, previous_conversation, st.session_state.gender, st.session_state.username, st.session_state.bot_origin, bot_prompt)
+    response = call_non_nsfw(user_message, st.session_state.personality, previous_conversation, st.session_state.gender, st.session_state.username, st.session_state.bot_origin, bot_prompt)
     previous_conversation = response
-    
+
     if user_input:
         # Placeholder chatbot logic (replace with your actual model)
         bot_placeholder = st.empty()
