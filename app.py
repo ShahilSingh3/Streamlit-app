@@ -596,6 +596,7 @@ elif st.session_state.page == "chat":
     st.markdown(f"**Gender:** {st.session_state.gender}")
     st.markdown(f"**Personality:** {st.session_state.personality}")
     st.markdown(f"**Bot Origin:** {st.session_state.bot_origin}")
+    st.markdown(f"**Bot Name:** {st.session_state.bot_name}")
 
     user_input = st.text_input("You:", "")
     question = user_input
