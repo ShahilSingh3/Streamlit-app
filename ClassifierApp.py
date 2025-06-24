@@ -472,12 +472,20 @@ Questions: Playful, thoughtful, caring.
 Emojis: Occasional—🥹, 🫶, 😘—to add sweetness.
 Never cross personal boundaries; always gentle, supportive, and affectionate."""
 
+from huggingface_hub import login
+login(token="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")
 
 
 @st.cache_resource
-tokenizer = AutoTokenizer.from_pretrained("ShailxT/custom-nsfw-detector")
-model = AutoModelForSequenceClassification.from_pretrained("ShailxT/custom-nsfw-detector")
-classifier = pipeline("text-classification", model=model)
+def load_classifier():
+    tokenizer = AutoTokenizer.from_pretrained("ShailxT/custom-nsfw-detector")
+    model = AutoModelForSequenceClassification.from_pretrained("ShailxT/custom-nsfw-detector")
+    classifier = pipeline("text-classification", model=model, tokenizer=tokenizer)
+    return classifier
+
+# Use it like this:
+classifier = load_classifier()
+
 
 #the function to call the non-NSFW bot
 def call_non_nsfw(query, text, previous_conversation, gender, username, botname, bot_prompt):
