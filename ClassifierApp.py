@@ -475,11 +475,9 @@ Never cross personal boundaries; always gentle, supportive, and affectionate."""
 
 
 @st.cache_resource
-def load_classifier():
-    classifier = pipeline("text-classification", model="ShailxT/custom-nsfw-detector")
-    return classifier
-
-classifier = load_classifier()
+tokenizer = AutoTokenizer.from_pretrained("ShailxT/custom-nsfw-detector")
+model = AutoModelForSequenceClassification.from_pretrained("ShailxT/custom-nsfw-detector")
+classifier = pipeline("text-classification", model=model)
 
 #the function to call the non-NSFW bot
 def call_non_nsfw(query, text, previous_conversation, gender, username, botname, bot_prompt):
