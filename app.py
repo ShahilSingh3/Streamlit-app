@@ -607,7 +607,7 @@ elif st.session_state.page == "chat":
     previous_conversation = ""  # Implement history later if needed
     
     bot_prompt = (
-        "You are a person from " + bot_origin +
+        "You are a person from " + st.session_state.bot_origin +
         ", your name is " + bot_name +
         ", and you talk/respond by applying your reasoning. " + personality +
         " Given you are the user's " + relationship +
