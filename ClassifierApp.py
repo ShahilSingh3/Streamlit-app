@@ -36,7 +36,7 @@ def call_non_nsfw(query, text, previous_conversation, gender, username, botname,
     user1 = username
     user2 = botname
     url_response = "https://api.novita.ai/v3/openai/chat/completions"  #  append `/chat/completions`
-    api_key = st.secrets["API_KEY"]  #  replace with your Novita API key
+    api_key = "sk_rNKb5W0X-Y8Nv69g3nid7KHzfiDvklvr7qwmrZ1Mhbk"  #  replace with your Novita API key
 
     headers = {
         "Authorization": f"Bearer {api_key}",
@@ -80,7 +80,7 @@ def call_nsfw(query, text, previous_conversation, gender, username, botname, bot
     user1 = username
     user2 = botname
     url_response = "https://api.novita.ai/v3/openai/chat/completions"  #  append `/chat/completions`
-    api_key = st.secrets["API_KEY"]  #  replace with your Novita API key
+    api_key = "sk_rNKb5W0X-Y8Nv69g3nid7KHzfiDvklvr7qwmrZ1Mhbk"  #  replace with your Novita API key
 
     headers = {
         "Authorization": f"Bearer {api_key}",
