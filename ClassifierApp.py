@@ -152,7 +152,7 @@ if st.session_state.page == "form":
 
 # Load and display the selected persona description
     if personality:
-        persona_text = load_persona(os.path.join(PERSONAS_DIR, selected_persona))
+        persona_text = load_persona(os.path.join(PERSONAS_DIR, personality))
 
     relationship = "Partner"
 
