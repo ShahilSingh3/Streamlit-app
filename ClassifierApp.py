@@ -59,7 +59,7 @@ def call_non_nsfw(query, text, previous_conversation, gender, username, botname,
             "presence_penalty": 0.0
         }
     )
-    
+    model = "llama-3-8b"
     try:
         print("Response JSON:")
         x = response.json()
@@ -71,7 +71,7 @@ def call_non_nsfw(query, text, previous_conversation, gender, username, botname,
     for k in ["User1", "user1", "[user1]", "[User1]"]:
         final = final.replace(k, user1)
 
-    return final
+    return final, model
 
 
 
@@ -103,7 +103,7 @@ def call_nsfw(query, text, previous_conversation, gender, username, botname, bot
             "presence_penalty": 0.0
         }
     )
-
+    model = "Stheno-v3.2"
     try:
         print("Response JSON:")
         x = response.json()
@@ -115,7 +115,7 @@ def call_nsfw(query, text, previous_conversation, gender, username, botname, bot
     for k in ["User1", "user1", "[user1]", "[User1]"]:
         final = final.replace(k, user1)
 
-    return final
+    return final, model
 
 # -----------------form page-------------------------
 
@@ -239,17 +239,17 @@ elif st.session_state.page == "chat":
 
     if result['label'] == 'nsfw' and result['score'] > 0.7:
         # print(question, "👉 Detected as **NSFW**") #was used to test the model and debugging
-        response = call_nsfw(user_message, st.session_state.personality, previous_conversation, st.session_state.gender, st.session_state.username, st.session_state.bot_origin, bot_prompt)
+        response, model = call_nsfw(user_message, st.session_state.personality, previous_conversation, st.session_state.gender, st.session_state.username, st.session_state.bot_origin, bot_prompt)
     else:
         # print(question, "✅ Detected as **NOT NSFW**") #was used to test the model and debugging
-        response = call_non_nsfw(user_message, st.session_state.personality, previous_conversation, st.session_state.gender, st.session_state.username, st.session_state.bot_origin, bot_prompt)
+        response, model = call_non_nsfw(user_message, st.session_state.personality, previous_conversation, st.session_state.gender, st.session_state.username, st.session_state.bot_origin, bot_prompt)
     
     previous_conversation = response
 
     if user_input:
         # Placeholder chatbot logic (replace with your actual model)
         bot_placeholder = st.empty()
-        bot_placeholder.markdown(f"🤖 **Bot:** , label = {result['label']} .... {response}")  # Final message without cursor
+        bot_placeholder.markdown(f"🤖 **Bot:** , label = {result['label']}, and the model = {model} .... {response}")  # Final message without cursor
 
 
     if st.button("⬅️ Back"):
