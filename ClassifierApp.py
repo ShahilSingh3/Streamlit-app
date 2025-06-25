@@ -24,34 +24,11 @@ def load_persona(filename):
     with open(filename, "r", encoding="utf-8") as f:
         return f.read()
 
-# Path to the personas folder
-PERSONAS_DIR = "Personas"
-
-# List available persona files
-persona_files = [f for f in os.listdir(PERSONAS_DIR) if f.endswith(".txt")]
-
-# User selects a persona
-selected_persona = st.selectbox("Select a persona", persona_files)
-
-# Load and display the selected persona description
-if selected_persona:
-    persona_text = load_persona(os.path.join(PERSONAS_DIR, selected_persona))
-    st.text_area("Persona Description", persona_text, height=300)
-
-
 #from huggingface_hub import login
 #login(token=st.secrets["token"])
 
 
-@st.cache_resource
-def load_classifier():
-    tokenizer = AutoTokenizer.from_pretrained("ynopet/roberta-base-openai-detector")
-    model = AutoModelForSequenceClassification.from_pretrained("ynopet/roberta-base-openai-detector")
-    classifier = pipeline("text-classification", model=model, tokenizer=tokenizer)
-    return classifier
 
-# Use it like this:
-classifier = load_classifier()
 
 
 #the function to call the non-NSFW bot
@@ -165,35 +142,47 @@ if st.session_state.page == "form":
         "Singapore_Male_partner"
     ]
     
-    personality = st.selectbox("Select Personality", Personality_options)
+    PERSONAS_DIR = "Personas"
+
+# List available persona files
+    persona_files = [f for f in os.listdir(PERSONAS_DIR) if f.endswith(".txt")]
+
+# User selects a persona
+    personality = st.selectbox("Select a persona", persona_files)
+
+# Load and display the selected persona description
+    if selected_persona:
+        persona_text = load_persona(os.path.join(PERSONAS_DIR, selected_persona))
+
     relationship = "Partner"
 
-    if personality == "ShriLanka_male_partner" or personality == "ShriLanka_female_partner":
+    if personality == "ShriLanka_male_partner.txt" or personality == "ShriLanka_female_partner.txt":
         bot_origin = "Shri Lanka"
-    elif personality == "Emirati_female_partner" or personality == "Emirati_male_partner":
+    elif personality == "Emirati_female_partner.txt" or personality == "Emirati_male_partner.txt":
         bot_origin  = "Emirates"
-    elif personality == "Delhi_male_partner" or personality == "Delhi_female_partner":
+    elif personality == "Delhi_male_partner.txt" or personality == "Delhi_female_partner.txt":
         bot_origin = "New Delhi"
     else:
         bot_origin = "Singapore"
         
-    if personality == "ShriLanka_male_partner":
+    if personality == "ShriLanka_male_partner.txt":
         bot_name = "Nalin"
-    elif personality == "ShriLanka_female_partner":
+    elif personality == "ShriLanka_female_partner.txt":
         bot_name = "Aruni"
-    elif personality == "Emirati_female_partner":
+    elif personality == "Emirati_female_partner.txt":
         bot_name  = "Amira Al Mazrouei"
-    elif personality == "Emirati_male_partner":
+    elif personality == "Emirati_male_partner.txt":
         bot_name = "Khalid Al Mansoori"
-    elif personality == "Delhi_male_partner":
+    elif personality == "Delhi_male_partner.txt":
         bot_name = "Rohan Mittal"
-    elif personality == "Delhi_female_partner":
+    elif personality == "Delhi_female_partner.txt":
         bot_name = "Alana Malhotra"
-    elif personality == "Singapore_female_partner":
+    elif personality == "Singapore_female_partner.txt":
         bot_name = "Clara Lim"
     else:
         bot_name = "Ryan Tan"
-    
+    relationship = "Partner"
+  
     # Store user info in session_state
     st.session_state.username = username
     st.session_state.gender = user_gender
@@ -214,6 +203,17 @@ elif st.session_state.page == "chat":
     st.markdown(f"**Gender:** {st.session_state.gender}")
     st.markdown(f"**Personality:** {st.session_state.personality}")
     st.markdown(f"**Bot Origin:** {st.session_state.bot_origin}")
+
+    
+    @st.cache_resource
+    def load_classifier():
+        tokenizer = AutoTokenizer.from_pretrained("ShailxT/custom-nsfw-detector")
+        model = AutoModelForSequenceClassification.from_pretrained("ShailxT/custom-nsfw-detector")
+        classifier = pipeline("text-classification", model = model, tokenizer = tokenizer)
+        return classifier
+
+    # Use it like this:
+    classifier = load_classifier()
 
     user_input = st.text_input("You:", "")
     question = user_input
