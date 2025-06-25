@@ -151,7 +151,7 @@ if st.session_state.page == "form":
     personality = st.selectbox("Select a persona", persona_files)
 
 # Load and display the selected persona description
-    if selected_persona:
+    if personality:
         persona_text = load_persona(os.path.join(PERSONAS_DIR, selected_persona))
 
     relationship = "Partner"
@@ -204,7 +204,7 @@ elif st.session_state.page == "chat":
     st.markdown(f"**Personality:** {st.session_state.personality}")
     st.markdown(f"**Bot Origin:** {st.session_state.bot_origin}")
 
-    
+
     @st.cache_resource
     def load_classifier():
         tokenizer = AutoTokenizer.from_pretrained("ShailxT/custom-nsfw-detector")
