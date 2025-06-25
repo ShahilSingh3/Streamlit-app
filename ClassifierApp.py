@@ -237,7 +237,7 @@ elif st.session_state.page == "chat":
     function_model = ""
     result = classifier(question)[0]
 
-    if result['label'] == 'nsfw' and result['score'] > 0.7:
+    if result['label'] == 'nsfw' and result['score'] > 0.5:
         # print(question, "👉 Detected as **NSFW**") #was used to test the model and debugging
         function_model = "Stheno v3.5"
         response, call_model = call_nsfw(user_message, st.session_state.personality, previous_conversation, st.session_state.gender, st.session_state.username, st.session_state.bot_origin, bot_prompt)
