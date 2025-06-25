@@ -234,22 +234,24 @@ elif st.session_state.page == "chat":
     )
     
     response = ""
-
+    function_model = ""
     result = classifier(question)[0]
 
     if result['label'] == 'nsfw' and result['score'] > 0.7:
         # print(question, "👉 Detected as **NSFW**") #was used to test the model and debugging
-        response, model = call_nsfw(user_message, st.session_state.personality, previous_conversation, st.session_state.gender, st.session_state.username, st.session_state.bot_origin, bot_prompt)
+        function_model = "Stheno v3.5"
+        response, call_model = call_nsfw(user_message, st.session_state.personality, previous_conversation, st.session_state.gender, st.session_state.username, st.session_state.bot_origin, bot_prompt)
     else:
+        function_model = "Llama 3-8B"
         # print(question, "✅ Detected as **NOT NSFW**") #was used to test the model and debugging
-        response, model = call_non_nsfw(user_message, st.session_state.personality, previous_conversation, st.session_state.gender, st.session_state.username, st.session_state.bot_origin, bot_prompt)
+        response, call_model = call_non_nsfw(user_message, st.session_state.personality, previous_conversation, st.session_state.gender, st.session_state.username, st.session_state.bot_origin, bot_prompt)
     
     previous_conversation = response
 
     if user_input:
         # Placeholder chatbot logic (replace with your actual model)
         bot_placeholder = st.empty()
-        bot_placeholder.markdown(f"🤖 **Bot:** , label = {result['label']}, and the model = {model} .... {response}")  # Final message without cursor
+        bot_placeholder.markdown(f"🤖 **Bot:** , label = {result['label']}, and the model = {call_model}, and the function model = {function_model} ....\n {response}")  # Final message without cursor
 
 
     if st.button("⬅️ Back"):
