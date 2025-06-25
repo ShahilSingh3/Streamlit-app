@@ -108,8 +108,8 @@ if st.session_state.page == "form":
     personality = st.selectbox("Select a persona", persona_files)
 
 # Load and display the selected persona description
-    if selected_persona:
-        persona_text = load_persona(os.path.join(PERSONAS_DIR, selected_persona))
+    if personality:
+        persona_text = load_persona(os.path.join(PERSONAS_DIR, personality))
 
     relationship = "Partner"
 
