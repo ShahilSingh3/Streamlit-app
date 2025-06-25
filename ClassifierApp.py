@@ -249,7 +249,7 @@ elif st.session_state.page == "chat":
     if user_input:
         # Placeholder chatbot logic (replace with your actual model)
         bot_placeholder = st.empty()
-        bot_placeholder.markdown(f"🤖 **Bot:** {response}")  # Final message without cursor
+        bot_placeholder.markdown(f"🤖 **Bot:** , label = {result['label']} .... {response}")  # Final message without cursor
 
 
     if st.button("⬅️ Back"):
