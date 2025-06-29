@@ -18,6 +18,11 @@ if "page" not in st.session_state:
 def go_to_chat():
     st.session_state.page = "chat"
 
+# Initialize message history if not present to store previous messages
+if "chat_history" not in st.session_state:
+    st.session_state.chat_history = []
+
+
 #Personalities
 
 def load_persona(filename):
@@ -222,7 +227,15 @@ elif st.session_state.page == "chat":
 
     user_message = question
 
-    previous_conversation = ""  # Implement history later if needed
+
+    # Build context from last 6 pairs (12 messages) of chat history
+    previous_conversation = ""
+    max_turns = 6
+    history = st.session_state.chat_history[-(max_turns * 2):]  # Last 6 user-bot exchanges
+    for msg in history:
+        prefix = "You:" if msg["role"] == "user" else f"{st.session_state.bot_name}:"
+        previous_conversation += f"{prefix} {msg['content']}\n"
+
     
     bot_prompt = (
         "You are a person from " + st.session_state.bot_origin +
@@ -249,9 +262,19 @@ elif st.session_state.page == "chat":
     previous_conversation = response
 
     if user_input:
-        # Placeholder chatbot logic (replace with your actual model)
-        bot_placeholder = st.empty()
-        bot_placeholder.markdown(f"🤖 **Bot:** , label = {result['label']}, and the model = {call_model}, and the function model = {function_model} ....\n {response}")  # Final message without cursor
+    # Append user message
+    st.session_state.chat_history.append({"role": "user", "content": user_input})
+    
+    # Append bot response
+    st.session_state.chat_history.append({"role": "bot", "content": response})
+
+    # Display chat history
+    for message in st.session_state.chat_history:
+        if message["role"] == "user":
+            st.markdown(f"👤 **You**: {message['content']}")
+        else:
+            st.markdown(f"🤖 **{st.session_state.bot_name}**: {message['content']}")
+
 
 
     if st.button("⬅️ Back"):
