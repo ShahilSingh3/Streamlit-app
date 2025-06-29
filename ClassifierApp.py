@@ -263,10 +263,10 @@ elif st.session_state.page == "chat":
 
     if user_input:
     # Append user message
-    st.session_state.chat_history.append({"role": "user", "content": user_input})
+        st.session_state.chat_history.append({"role": "user", "content": user_input})
     
     # Append bot response
-    st.session_state.chat_history.append({"role": "bot", "content": response})
+        st.session_state.chat_history.append({"role": "bot", "content": response})
 
     # Display chat history
     for message in st.session_state.chat_history:
