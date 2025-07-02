@@ -211,9 +211,11 @@ elif st.session_state.page == "chat":
 
 
     @st.cache_resource
+    from huggingface_hub import login
+    login(token=st.secrets["HF_TOKEN"])
     def load_classifier():
-        tokenizer = AutoTokenizer.from_pretrained("ShailxT/custom-nsfw-detector")
-        model = AutoModelForSequenceClassification.from_pretrained("ShailxT/custom-nsfw-detector")
+        tokenizer = AutoTokenizer.from_pretrained("CultureVo/fine-tuned_BERT_for_NSFW_classifier")
+        model = AutoModelForSequenceClassification.from_pretrained("CultureVo/fine-tuned_BERT_for_NSFW_classifier")
         classifier = pipeline("text-classification", model = model, tokenizer = tokenizer)
         return classifier
 
