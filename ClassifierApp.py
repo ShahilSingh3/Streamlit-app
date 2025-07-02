@@ -228,10 +228,10 @@ elif st.session_state.page == "chat":
     user_message = question
 
 
-    # Build context from last 6 pairs (12 messages) of chat history
+    # Build context from last 12 pairs (24 messages) of chat history
     previous_conversation = ""
-    max_turns = 6
-    history = st.session_state.chat_history[-(max_turns * 2):]  # Last 6 user-bot exchanges
+    max_turns = 12
+    history = st.session_state.chat_history[-(max_turns * 2):]  # Last 12 user-bot exchanges
     for msg in history:
         prefix = "You:" if msg["role"] == "user" else f"{st.session_state.bot_name}:"
         previous_conversation += f"{prefix} {msg['content']}\n"
