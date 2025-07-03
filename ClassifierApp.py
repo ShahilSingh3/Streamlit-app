@@ -9,6 +9,7 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification, pipe
 from transformers import TrainingArguments, Trainer
 import torch
 import time
+from huggingface_hub import login
 
 # Initialize session state for page routing
 if "page" not in st.session_state:
@@ -219,7 +220,6 @@ elif st.session_state.page == "chat":
 
 
     @st.cache_resource
-    from huggingface_hub import login
     login(token=st.secrets["HF_TOKEN"])
     def load_classifier():
         tokenizer = AutoTokenizer.from_pretrained("CultureVo/fine-tuned_BERT_for_NSFW_classifier")
