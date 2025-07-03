@@ -55,7 +55,11 @@ def call_non_nsfw(query, text, previous_conversation, gender, username, botname,
             "model": "meta-llama/llama-3-8b-instruct",  # model ID
             "messages": [
                 {"role": "system", "content": bot_prompt},
-                {"role": "user", "content": f"{previous_conversation} {query}"}
+                *[
+                    {"role": "user" if msg["role"] == "user" else "assistant", "content": msg["content"]}
+                    for msg in st.session_state.chat_history[-12:]
+                ],
+                {"role": "user", "content": question}
             ],
             "allow_nsfw": False,  #This is what enables NSFW generation
             "temperature": 1.0,               # Adjusts randomness; 1.0 is good for creativity
@@ -99,7 +103,11 @@ def call_nsfw(query, text, previous_conversation, gender, username, botname, bot
             "model": "Sao10K/L3-8B-Stheno-v3.2",  # model ID
             "messages": [
                 {"role": "system", "content": bot_prompt},
-                {"role": "user", "content": f"{previous_conversation} {query}"}
+                *[
+                    {"role": "user" if msg["role"] == "user" else "assistant", "content": msg["content"]}
+                    for msg in st.session_state.chat_history[-12:]
+                ],
+                {"role": "user", "content": question}
             ],
             "allow_nsfw": True,  #This is what enables NSFW generation
             "temperature": 1.0,               # Adjusts randomness; 1.0 is good for creativity
@@ -211,9 +219,11 @@ elif st.session_state.page == "chat":
 
 
     @st.cache_resource
+    from huggingface_hub import login
+    login(token=st.secrets["HF_TOKEN"])
     def load_classifier():
-        tokenizer = AutoTokenizer.from_pretrained("ShailxT/custom-nsfw-detector")
-        model = AutoModelForSequenceClassification.from_pretrained("ShailxT/custom-nsfw-detector")
+        tokenizer = AutoTokenizer.from_pretrained("CultureVo/fine-tuned_BERT_for_NSFW_classifier")
+        model = AutoModelForSequenceClassification.from_pretrained("CultureVo/fine-tuned_BERT_for_NSFW_classifier")
         classifier = pipeline("text-classification", model = model, tokenizer = tokenizer)
         return classifier
 
