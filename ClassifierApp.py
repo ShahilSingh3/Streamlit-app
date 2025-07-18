@@ -283,7 +283,7 @@ elif st.session_state.page == "chat":
         if message["role"] == "user":
             st.markdown(f"👤 **You**: {message['content']}")
         else:
-            st.markdown(f"🤖 **{st.session_state.bot_name}**: {message['content']}")
+            st.markdown(f"🤖 **{st.session_state.bot_name}**  **{call_model}** : {message['content']}")
 
 
 
